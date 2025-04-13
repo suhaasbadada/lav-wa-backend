@@ -1,0 +1,5 @@
+library(rgl)
+z <- outer(1:10, 1:10, function(x, y) sin(sqrt(x^2 + y^2)))
+open3d()
+surface3d(1:10, 1:10, z)
+rglwidget::rglwidget() %>% htmlwidgets::saveWidget(file = 'chart.html', selfcontained = TRUE)
