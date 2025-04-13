@@ -1,7 +1,10 @@
 from flask import Flask, request, jsonify, send_from_directory
 import os, uuid, subprocess, shutil
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
 STATIC_DIR = os.path.join(os.getcwd(), "static")
 RUNS_DIR = os.path.join(os.getcwd(), "runs")
 
@@ -50,12 +53,11 @@ def execute_script():
 
     for file in os.listdir(session_path):
         if file.endswith((".png", ".html")):
-            shutil.copy(
-                os.path.join(session_path, file),
-                os.path.join(STATIC_DIR, f"{session_id}_{file}")
-            )
+            file_path = os.path.join(session_path, file)
+            shutil.copy(file_path, os.path.join(STATIC_DIR, f"{session_id}_{file}"))
+
             return jsonify({
-                "url": f"/static/{session_id}_{file}"
+                "url": f"http://127.0.0.1:5000/static/{session_id}_{file}"
             })
 
     return jsonify({"error": "No visualization generated"}), 500
